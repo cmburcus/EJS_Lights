@@ -17,8 +17,6 @@
 // Define communication
 RF24 radio(7, 8); // CSN, CE
 const byte address[6] = "P_EJS"; // Primary EJS
-#define RACE_START_SIGNAL 8
-#define RACE_FAULT_SIGNAL 9
 
 // Define LEDs
 #define LED_FAULT 5
@@ -71,7 +69,6 @@ void setup() {
   Serial.begin(9600);
   
   // Define pin modes
-  pinMode(RACE_START_SIGNAL, INPUT);
   pinMode(LED_FAULT, OUTPUT);
   pinMode(LED_READY, OUTPUT);
   pinMode(LED_SET, OUTPUT);
@@ -206,7 +203,11 @@ void handlePreRaceSequence() {
   }
 
   if (isRaceSequenceStarted) {
-    digitalWrite(LED_FAULT, isMillisBetween(timePassed, startStepOneTime, startStepTwoTime) ? HIGH : LOW);
+    // If a fault has been commited, ignore red LED
+    if (faults == 0) {
+      digitalWrite(LED_FAULT, isMillisBetween(timePassed, startStepOneTime, startStepTwoTime) ? HIGH : LOW);
+    }
+    
     digitalWrite(LED_READY, isMillisBetween(timePassed, startStepTwoTime, startStepThreeTime) ? HIGH : LOW);
     digitalWrite(LED_SET, isMillisBetween(timePassed, startStepThreeTime, startStepFourTime) ? HIGH : LOW);
     
@@ -224,7 +225,7 @@ void handleRace() {
 
 void handleFault() {
   // If race is not about to start, nothing to do
-  if (!isRaceSequenceStarted || !isRaceStarted) {
+  if (!isRaceSequenceStarted && !isRaceStarted) {
     return;
   }
 
