@@ -9,7 +9,7 @@
 #include <race.h>
 
 // Define communication
-RF24 radio(7, 8); // CSN, CE
+RF24 radio(CE_PIN, CSN_PIN);
 const byte address[6] = "P_EJS"; // Primary EJS
 
 /**
@@ -18,7 +18,7 @@ const byte address[6] = "P_EJS"; // Primary EJS
 void initializeRadio() {
   radio.begin();
   radio.openReadingPipe(0, address);
-  radio.setPALevel(RF24_PA_MIN);
+  radio.setPALevel(RF24_PA_HIGH);
   radio.startListening();
 }
 
