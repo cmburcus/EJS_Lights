@@ -1,11 +1,14 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-// Define LEDs
+// Define pins
 #define LED_FAULT 5
 #define LED_READY 4
 #define LED_SET 3
 #define LED_GO 2
+
+#define CE_PIN 7
+#define CSN_PIN 8
 
 // Define intervals
 #define PRE_START_LED_DELAY 300
